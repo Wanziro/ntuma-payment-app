@@ -27,7 +27,7 @@ const PaymentRequests = () => {
     let sub = true;
     if (sub) {
       loadingError.trim().length > 0 &&
-        payments.length === 0 &&
+        // &&  payments.length === 0
         setShowAlert(true);
     }
     return () => {

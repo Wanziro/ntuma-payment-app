@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {Profiler, useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {NavigationContainer} from '@react-navigation/native';
 import {
@@ -14,6 +14,9 @@ import {useLoadBasiData} from '../../helpers';
 import PaymentRequests from '../../screens/logged-in/payment-requests';
 import {INavigationProp} from '../../../interfaces';
 import {saveAppToken} from '../../actions/user';
+import Profile from '../../screens/logged-in/profile';
+import UpdateUserInfo from '../../screens/logged-in/update-user-info';
+import ChangePassword from '../../screens/logged-in/change-password';
 const Stack = createStackNavigator();
 
 function LoggedIn() {
@@ -65,11 +68,47 @@ function LoggedIn() {
             headerTintColor: APP_COLORS.WHITE,
             headerRight: () => (
               <View style={{marginRight: 15}}>
-                <Pressable>
+                <Pressable onPress={() => navigation.navigate('Profile')}>
                   <Icon name="gear" size={25} color={APP_COLORS.WHITE} />
                 </Pressable>
               </View>
             ),
+          })}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={Profile}
+          options={{
+            headerShown: true,
+            headerTitleAlign: 'center',
+            headerTintColor: APP_COLORS.WHITE,
+            headerStyle: {backgroundColor: APP_COLORS.MAROON},
+          }}
+        />
+        <Stack.Screen
+          name="UpdateUserInfo"
+          component={UpdateUserInfo}
+          options={({route, navigation}: INavigationProp) => ({
+            title: 'Update Personal Information',
+            headerStyle: {
+              backgroundColor: APP_COLORS.MAROON,
+            },
+            headerTitleAlign: 'center',
+            headerTintColor: APP_COLORS.WHITE,
+            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          })}
+        />
+        <Stack.Screen
+          name="ChangePassword"
+          component={ChangePassword}
+          options={({route, navigation}: INavigationProp) => ({
+            title: 'ChangePassword',
+            headerStyle: {
+              backgroundColor: APP_COLORS.MAROON,
+            },
+            headerTitleAlign: 'center',
+            headerTintColor: APP_COLORS.WHITE,
+            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           })}
         />
       </Stack.Navigator>

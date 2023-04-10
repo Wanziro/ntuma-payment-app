@@ -4,6 +4,7 @@ import {resetUser} from '../actions/user';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {IMarket, TOAST_MESSAGE_TYPES} from '../../interfaces';
 import {fetchMarkets} from '../actions/markets';
+import RNRestart from 'react-native-restart';
 
 //custom dispatcher hook
 export const useResetUser = () => {
@@ -73,9 +74,10 @@ export const errorHandler = (error: any) => {
   handleAuthError(error);
 };
 
-export const handleAuthError = (error: any) => {
+export const handleAuthError = async (error: any) => {
   if (error?.response?.status == 401) {
-    AsyncStorage.clear();
+    await AsyncStorage.clear();
+    RNRestart.restart();
   }
 };
 
