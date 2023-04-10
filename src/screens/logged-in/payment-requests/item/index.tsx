@@ -1,0 +1,117 @@
+import {View, Text, Linking, Pressable} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {IClient, IMarket, IPayment} from '../../../../../interfaces';
+import WhiteCard from '../../../../components/white-card';
+import {viewFlexCenter, viewFlexSpace} from '../../../../constants/styles';
+import {APP_COLORS} from '../../../../constants/colors';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../../../reducers';
+import {currencyFormatter, errorHandler} from '../../../../helpers';
+import TimeAgo from '@andordavoti/react-native-timeago';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
+interface IPaymentItemProps {
+  item: IPayment;
+}
+const PaymentItem = ({item}: IPaymentItemProps) => {
+  const {clients} = useSelector((state: RootState) => state.clients);
+  const {markets} = useSelector((state: RootState) => state.markets);
+  const [market, setMarket] = useState<IMarket | undefined>(undefined);
+  const [agent, setAgent] = useState<IClient | undefined>(undefined);
+
+  const handlePay = (amount: number) => {
+    try {
+      const money = parseInt(amount as any);
+      const ussdCode = `*182*8*1*${money}#`;
+      const encodedUssdCode = encodeURIComponent(ussdCode);
+      Linking.openURL('tel:' + encodedUssdCode);
+    } catch (error) {
+      errorHandler(error);
+    }
+  };
+  const handleCall = (phone: any) => {
+    try {
+      Linking.openURL('tel:' + phone);
+    } catch (error) {
+      errorHandler(error);
+    }
+  };
+
+  useEffect(() => {
+    const agent = clients.find(i => i.agentId === item.agentId);
+    const market = markets.find(i => i.mId === item.marketId);
+    setAgent(agent);
+    setMarket(market);
+  }, [item]);
+  return (
+    <WhiteCard style={{marginBottom: 15, padding: 10}}>
+      <View style={[viewFlexSpace]}>
+        <Text style={{color: APP_COLORS.TEXT_GRAY, flex: 1, marginRight: 10}}>
+          {market?.name} | {agent?.names}
+        </Text>
+        <TimeAgo
+          style={{color: APP_COLORS.BLACK, fontWeight: '700'}}
+          dateTo={new Date(item.createdAt)}
+        />
+      </View>
+      <View style={[viewFlexSpace]}>
+        <Text
+          style={{color: APP_COLORS.BLACK, fontWeight: '600', marginRight: 10}}>
+          Names
+        </Text>
+        <Text style={{color: APP_COLORS.TEXT_GRAY, textAlign: 'right'}}>
+          {item.supplierNames}
+        </Text>
+      </View>
+      <View style={[viewFlexSpace]}>
+        <Text
+          style={{color: APP_COLORS.BLACK, fontWeight: '600', marginRight: 10}}>
+          MOMO CODE
+        </Text>
+        <Text style={{color: APP_COLORS.TEXT_GRAY, textAlign: 'right'}}>
+          {item.supplierMOMOCode}
+        </Text>
+      </View>
+      <View style={[viewFlexSpace]}>
+        <Text
+          style={{color: APP_COLORS.BLACK, fontWeight: '600', marginRight: 10}}>
+          AMOUNT
+        </Text>
+        <Text style={{color: APP_COLORS.TEXT_GRAY, textAlign: 'right'}}>
+          {currencyFormatter(item.totalAmount)} RWF
+        </Text>
+      </View>
+      <View
+        style={{
+          marginTop: 10,
+          borderTopColor: APP_COLORS.BORDER_COLOR,
+          borderTopWidth: 1,
+        }}>
+        <View style={[viewFlexSpace, {paddingTop: 10}]}>
+          <Pressable onPress={() => handlePay(item.totalAmount)}>
+            <View style={[viewFlexCenter]}>
+              <Icon name="send-to-mobile" color={APP_COLORS.BLACK} size={20} />
+              <Text style={{color: APP_COLORS.BLACK}}>Pay</Text>
+            </View>
+          </Pressable>
+          <Pressable onPress={() => handleCall(agent?.phone)}>
+            <View style={[viewFlexCenter]}>
+              <Icon name="call" color={APP_COLORS.BLACK} size={20} />
+              <Text style={{color: APP_COLORS.BLACK}}>Call Agent</Text>
+            </View>
+          </Pressable>
+          <View style={[viewFlexCenter]}>
+            <Icon2 name="close-circle" color={APP_COLORS.MAROON} size={20} />
+            <Text style={{color: APP_COLORS.MAROON}}>Reject</Text>
+          </View>
+          <View style={[viewFlexCenter]}>
+            <Icon2 name="check-circle" color={APP_COLORS.GREEN} size={20} />
+            <Text style={{color: APP_COLORS.GREEN}}>Approve</Text>
+          </View>
+        </View>
+      </View>
+    </WhiteCard>
+  );
+};
+
+export default PaymentItem;

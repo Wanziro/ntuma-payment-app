@@ -492,3 +492,26 @@ export enum USER_TYPE_ENUM {
   RIDER = 'RIDER',
   CLIENT = 'CLIENT',
 }
+
+export interface IPayment {
+  id: number;
+  marketId: number;
+  orderId: number;
+  agentId: number;
+  productsList: ICartItem[];
+  totalAmount: number;
+  supplierMOMOCode: number;
+  supplierNames: string;
+  paymentStatus: PAYMENT_STATUS_ENUM;
+  payementProof: string;
+  failureReason: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IPaymentListReducer {
+  payments: IPayment[];
+  isLoading: boolean;
+  hardReloading: boolean;
+  loadingError: string;
+}

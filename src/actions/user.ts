@@ -63,14 +63,18 @@ export const resetUser = () => ({type: RESET_USER});
 export const saveAppToken = (): any => (dispatch: any, getState: any) => {
   const {user} = getState();
   try {
-    if (user.fbToken.trim() === '') {
+    if (
+      user.fbToken.trim() === '' ||
+      user.token.trim() === '' ||
+      user.role !== 'admin'
+    ) {
       return;
     }
     axios
       .post(app.BACKEND_URL + '/apptokens/', {
         userId: user.userId,
         fbToken: user.fbToken,
-        appType: 'CLIENT',
+        appType: 'ADMIN',
       })
       .then(res => {
         // console.log({res});

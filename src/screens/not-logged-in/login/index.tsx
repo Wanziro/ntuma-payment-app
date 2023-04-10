@@ -42,6 +42,7 @@ import CustomErrorAlert from '../../../components/custom-error-alert';
 
 const {height} = Dimensions.get('window');
 const initialState = {
+  app: true,
   emailOrPhone: '',
   password: '',
 };
@@ -49,8 +50,6 @@ const Login = ({navigation}: INavigationProp) => {
   const dispatch = useDispatch();
   const [state, setState] = useState(initialState);
   const [isLoading, setIsLoading] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
-  const [googleErrorMessage, setGoogleErrorMessage] = useState('');
 
   const handleSubmit = () => {
     if (state.emailOrPhone.trim() === '' || state.password.trim() === '') {
@@ -64,17 +63,22 @@ const Login = ({navigation}: INavigationProp) => {
         setIsLoading(false);
         const {role, walletAmounts, userId, names, phone, image, email, token} =
           res.data;
-        dispatch(setUserNames(names));
-        dispatch(setUserRole(role));
-        dispatch(setUserWalletAmount(walletAmounts));
-        dispatch(setUserId(userId));
-        dispatch(setUserPhone(phone));
-        dispatch(setUserEmail(email));
-        dispatch(setUserImage(image));
-        dispatch(saveAppToken());
-        dispatch(setUserToken(token));
-        toastMessage(TOAST_MESSAGE_TYPES.SUCCESS, res.data.msg);
-        navigation.replace('HomeTabs');
+        if (role === 'admin') {
+          dispatch(setUserNames(names));
+          dispatch(setUserRole(role));
+          dispatch(setUserWalletAmount(walletAmounts));
+          dispatch(setUserId(userId));
+          dispatch(setUserPhone(phone));
+          dispatch(setUserEmail(email));
+          dispatch(setUserImage(image));
+          dispatch(setUserToken(token));
+          toastMessage(TOAST_MESSAGE_TYPES.SUCCESS, res.data.msg);
+          setTimeout(() => {
+            dispatch(saveAppToken());
+          }, 1000);
+        } else {
+          setState(initialState);
+        }
       })
       .catch(error => {
         setIsLoading(false);
@@ -99,10 +103,10 @@ const Login = ({navigation}: INavigationProp) => {
                     fontWeight: '600',
                     fontSize: 16,
                   }}>
-                  Email or Phone(07...)
+                  Email Address
                 </Text>
                 <TextInput
-                  placeholder="Enter your phone or email address"
+                  placeholder="Enter your email address"
                   style={commonInput}
                   onChangeText={text =>
                     setState({...state, emailOrPhone: text})
@@ -140,30 +144,11 @@ const Login = ({navigation}: INavigationProp) => {
                   <Text style={[btnWithBgTextStyles]}>Sign in</Text>
                 </View>
               </Pressable>
-              <Pressable
-                disabled={isLoading}
-                onPress={() => navigation.navigate('Register')}
-                style={{marginVertical: 10}}>
-                <View style={[btnWithoutBgContainerStyles]}>
-                  <Text
-                    style={[
-                      btnWithoutBgTextStyles,
-                      {color: APP_COLORS.MAROON},
-                    ]}>
-                    Sign up
-                  </Text>
-                </View>
-              </Pressable>
             </View>
           </ScrollView>
         </View>
       </View>
       <FullPageLoader isLoading={isLoading} />
-      <CustomErrorAlert showAlert={showAlert} setShowAlert={setShowAlert}>
-        <Text style={{color: APP_COLORS.TEXT_GRAY, textAlign: 'center'}}>
-          {googleErrorMessage}
-        </Text>
-      </CustomErrorAlert>
     </KeyboardAvoidingView>
   );
 };
