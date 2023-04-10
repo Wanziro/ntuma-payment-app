@@ -9,6 +9,11 @@ import {
   USER_TYPE_ENUM,
 } from '../../../interfaces';
 import {app} from '../../constants/app';
+import {
+  addPaymentList,
+  deletePaymentList,
+} from '../../actions/supplierpayments';
+import {Vibration} from 'react-native';
 
 let mSocket: any = undefined;
 let mStore: any = undefined;
@@ -25,7 +30,7 @@ export const subscribeToSocket = (store: any) => {
   mSocket.on('connect', () => {
     console.log('connected to socket');
   });
-  emitSocket('addUser', {userType: 'client', userId: user.userId});
+  emitSocket('addUser', {userType: 'admin', email: user.email});
   mSocket.on('NtumaEventNames', (data: ISocketData) => {
     // console.log(data);
     if (
@@ -34,16 +39,6 @@ export const subscribeToSocket = (store: any) => {
       mStore !== undefined
     ) {
       dispatchBasicAppData(data, mStore);
-    }
-  });
-  mSocket.on('NtumaClientEventNames', (data: {type: string; data: any}) => {
-    // console.log(data);
-    if (
-      data.type !== undefined &&
-      data.data !== undefined &&
-      mStore !== undefined
-    ) {
-      dispatchUserData(data, mStore);
     }
   });
 
@@ -57,34 +52,14 @@ export const subscribeToSocket = (store: any) => {
 };
 
 const dispatchBasicAppData = (data: ISocketData, store: any) => {
-  //markets
-  // if (
-  //   data.type === EVENT_NAMES_ENUM.ADD_MARKET ||
-  //   data.type === EVENT_NAMES_ENUM.UPDATE_MARKET
-  // ) {
-  //   store.dispatch(setAddOrUpdateMarket(data.data));
-  // }
-  // if (data.type === EVENT_NAMES_ENUM.DELETE_MARKET) {
-  //   store.dispatch(setDeleteMarket(data.data));
-  // }
-};
-
-const dispatchUserData = (data: ISocketData, store: any) => {
-  const {user} = store.getState();
-  const {userId} = user;
-  //messages
-  // if (
-  //   data.type === EVENT_NAMES_ENUM.ADD_MESSAGE ||
-  //   data.type === EVENT_NAMES_ENUM.UPDATE_MESSAGE
-  // ) {
-  //   const message = data.data as IMessage;
-  //   if (message?.userId !== undefined && message.userId == userId) {
-  //     store.dispatch(setAddOrUpdateMessages(data.data));
-  //   }
-  // }
-  // if (data.type === EVENT_NAMES_ENUM.DELETE_MESSAGE) {
-  //   store.dispatch(setDeleteMessage(data.data));
-  // }
+  //supplier payments
+  if (data.type === EVENT_NAMES_ENUM.ADD_SUPPLIERS_PAYMENT_DETAILS) {
+    store.dispatch(addPaymentList(data.data));
+    Vibration.vibrate([500, 200, 500]);
+  }
+  if (data.type === EVENT_NAMES_ENUM.DELETE_SUPPLIERS_PAYMENT_DETAILS) {
+    store.dispatch(deletePaymentList(data.data));
+  }
 };
 
 export const unSubscribeToSocket = () => {

@@ -48,7 +48,7 @@ export const fetchPaymentList = (): any => (dispatch: any, getState: any) => {
   dispatch(setLoadingPaymentListError(''));
   const {user} = getState();
   axios
-    .get(app.BACKEND_URL + '/suppliers/all', setHeaders(user.token))
+    .get(app.BACKEND_URL + '/suppliers/all/app', setHeaders(user.token))
     .then(res => {
       dispatch(setIsLoadingPaymentList(false));
       dispatch(setIsHardReLoadingPaymentList(false));

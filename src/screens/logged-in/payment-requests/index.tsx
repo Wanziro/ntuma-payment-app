@@ -45,6 +45,10 @@ const PaymentRequests = () => {
     };
   }, [isLoading]);
 
+  useEffect(() => {
+    dispatch(fetchPaymentList());
+  }, []);
+
   const alertCallBack = () => {
     setShowAlert(false);
     dispatch(setIsHardReLoadingPaymentList(true));

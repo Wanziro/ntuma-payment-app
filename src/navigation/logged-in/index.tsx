@@ -52,9 +52,7 @@ function LoggedIn() {
           // headerMode: 'float',
           gestureEnabled: true,
           gestureDirection: 'horizontal',
-          // cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-          cardStyleInterpolator:
-            CardStyleInterpolators.forFadeFromBottomAndroid,
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}>
         <Stack.Screen
           name="PaymentRequests"
@@ -95,7 +93,6 @@ function LoggedIn() {
             },
             headerTitleAlign: 'center',
             headerTintColor: APP_COLORS.WHITE,
-            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           })}
         />
         <Stack.Screen
@@ -108,7 +105,6 @@ function LoggedIn() {
             },
             headerTitleAlign: 'center',
             headerTintColor: APP_COLORS.WHITE,
-            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           })}
         />
       </Stack.Navigator>
