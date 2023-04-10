@@ -3,14 +3,7 @@ import {useDispatch} from 'react-redux';
 import {resetUser} from '../actions/user';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {IMarket, TOAST_MESSAGE_TYPES} from '../../interfaces';
-import {fetchProducts} from '../actions/products';
-import {fetchCategories} from '../actions/categories';
-import {fetchProductPrices} from '../actions/productPrices';
-import {fetchDeliveryFees} from '../actions/deliveryFees';
-import {fetchBanners} from '../actions/banners';
-import {fethcPackagingFees} from '../actions/packagingFees';
-import {fetchSystemFees} from '../actions/systemFees';
-import {fetchAgentsFees} from '../actions/agentsFees';
+import {fetchMarkets} from '../actions/markets';
 
 //custom dispatcher hook
 export const useResetUser = () => {
@@ -23,14 +16,7 @@ export const useResetUser = () => {
 export const useLoadBasiData = (): any => {
   const dispatch = useDispatch();
   return (payload: any) => {
-    dispatch(fetchProducts());
-    dispatch(fetchCategories());
-    dispatch(fetchProductPrices());
-    dispatch(fetchDeliveryFees());
-    dispatch(fetchBanners());
-    dispatch(fethcPackagingFees());
-    dispatch(fetchSystemFees());
-    dispatch(fetchAgentsFees());
+    dispatch(fetchMarkets());
   };
 };
 
