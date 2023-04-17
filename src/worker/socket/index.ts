@@ -1,13 +1,5 @@
 import {io} from 'socket.io-client';
-import {
-  EVENT_NAMES_ENUM,
-  IMessage,
-  INotificaton,
-  IOrder,
-  ISocketData,
-  IWalletTransaction,
-  USER_TYPE_ENUM,
-} from '../../../interfaces';
+import {EVENT_NAMES_ENUM, ISocketData} from '../../../interfaces';
 import {app} from '../../constants/app';
 import {
   addPaymentList,

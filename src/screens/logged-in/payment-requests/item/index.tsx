@@ -12,8 +12,18 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 interface IPaymentItemProps {
   item: IPayment;
+  setSelectedPayment: any;
+  setShowReject: any;
+  setReason: any;
+  handleDocumentSelect: any;
 }
-const PaymentItem = ({item}: IPaymentItemProps) => {
+const PaymentItem = ({
+  item,
+  setSelectedPayment,
+  handleDocumentSelect,
+  setShowReject,
+  setReason,
+}: IPaymentItemProps) => {
   const {clients} = useSelector((state: RootState) => state.clients);
   const {markets} = useSelector((state: RootState) => state.markets);
   const [market, setMarket] = useState<IMarket | undefined>(undefined);
@@ -43,6 +53,16 @@ const PaymentItem = ({item}: IPaymentItemProps) => {
     setAgent(agent);
     setMarket(market);
   }, [item]);
+  const handleReject = () => {
+    setSelectedPayment(item);
+    setReason('');
+    setShowReject(true);
+  };
+
+  const handleApprove = () => {
+    setSelectedPayment(item);
+    handleDocumentSelect();
+  };
   return (
     <WhiteCard style={{marginBottom: 15, padding: 10}}>
       <View style={[viewFlexSpace]}>
@@ -100,14 +120,19 @@ const PaymentItem = ({item}: IPaymentItemProps) => {
               <Text style={{color: APP_COLORS.BLACK}}>Call Agent</Text>
             </View>
           </Pressable>
-          <View style={[viewFlexCenter]}>
-            <Icon2 name="close-circle" color={APP_COLORS.MAROON} size={20} />
-            <Text style={{color: APP_COLORS.MAROON}}>Reject</Text>
-          </View>
-          <View style={[viewFlexCenter]}>
-            <Icon2 name="check-circle" color={APP_COLORS.GREEN} size={20} />
-            <Text style={{color: APP_COLORS.GREEN}}>Approve</Text>
-          </View>
+          <Pressable onPress={() => handleReject()}>
+            <View style={[viewFlexCenter]}>
+              <Icon2 name="close-circle" color={APP_COLORS.MAROON} size={20} />
+              <Text style={{color: APP_COLORS.MAROON}}>Reject</Text>
+            </View>
+          </Pressable>
+
+          <Pressable onPress={handleApprove}>
+            <View style={[viewFlexCenter]}>
+              <Icon2 name="check-circle" color={APP_COLORS.GREEN} size={20} />
+              <Text style={{color: APP_COLORS.GREEN}}>Approve</Text>
+            </View>
+          </Pressable>
         </View>
       </View>
     </WhiteCard>

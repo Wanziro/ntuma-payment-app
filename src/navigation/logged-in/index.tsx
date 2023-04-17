@@ -17,6 +17,7 @@ import {saveAppToken} from '../../actions/user';
 import Profile from '../../screens/logged-in/profile';
 import UpdateUserInfo from '../../screens/logged-in/update-user-info';
 import ChangePassword from '../../screens/logged-in/change-password';
+import Preview from '../../screens/logged-in/preview';
 const Stack = createStackNavigator();
 
 function LoggedIn() {
@@ -72,6 +73,17 @@ function LoggedIn() {
               </View>
             ),
           })}
+        />
+        <Stack.Screen
+          name="Preview"
+          component={Preview}
+          options={{
+            title: 'Proof Preview',
+            headerShown: true,
+            headerTitleAlign: 'center',
+            headerTintColor: APP_COLORS.WHITE,
+            headerStyle: {backgroundColor: APP_COLORS.MAROON},
+          }}
         />
         <Stack.Screen
           name="Profile"
