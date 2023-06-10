@@ -18,7 +18,12 @@ import Profile from '../../screens/logged-in/profile';
 import UpdateUserInfo from '../../screens/logged-in/update-user-info';
 import ChangePassword from '../../screens/logged-in/change-password';
 import Preview from '../../screens/logged-in/preview';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import RidersPaymentRequests from '../../screens/logged-in/riders-payment-requests';
+import AgentsPaymentRequests from '../../screens/logged-in/agents-payment-req';
 const Stack = createStackNavigator();
+
+const TopTab = createMaterialTopTabNavigator();
 
 function LoggedIn() {
   const dispatch = useDispatch();
@@ -44,6 +49,45 @@ function LoggedIn() {
     dispatch(saveAppToken());
   }, []);
 
+  function PaymentTabs() {
+    return (
+      <TopTab.Navigator
+        // initialRouteName=""
+        screenOptions={{
+          tabBarActiveTintColor: APP_COLORS.WHITE,
+          tabBarInactiveTintColor: APP_COLORS.WHITE,
+          tabBarIndicatorContainerStyle: {backgroundColor: APP_COLORS.MAROON},
+          tabBarIndicatorStyle: {
+            backgroundColor: 'white',
+            height: 5,
+          },
+          tabBarLabelStyle: {textTransform: 'capitalize'},
+        }}>
+        <TopTab.Screen
+          options={{
+            tabBarLabel: 'Suppliers',
+          }}
+          name="PaymentRequests"
+          component={PaymentRequests}
+        />
+        <TopTab.Screen
+          options={{
+            tabBarLabel: 'Agents',
+          }}
+          name="Agent"
+          component={AgentsPaymentRequests}
+        />
+        <TopTab.Screen
+          options={{
+            tabBarLabel: 'Riders',
+          }}
+          name="Riders"
+          component={RidersPaymentRequests}
+        />
+      </TopTab.Navigator>
+    );
+  }
+
   return (
     <NavigationContainer>
       <StatusBar backgroundColor={APP_COLORS.MAROON} barStyle="light-content" />
@@ -55,6 +99,25 @@ function LoggedIn() {
           gestureDirection: 'horizontal',
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}>
+        <Stack.Screen
+          name="HomeTabs"
+          component={PaymentTabs}
+          options={({route, navigation}: INavigationProp) => ({
+            title: 'Payment Requests',
+            headerStyle: {
+              backgroundColor: APP_COLORS.MAROON,
+            },
+            headerTitleAlign: 'left',
+            headerTintColor: APP_COLORS.WHITE,
+            headerRight: () => (
+              <View style={{marginRight: 15}}>
+                <Pressable onPress={() => navigation.navigate('Profile')}>
+                  <Icon name="gear" size={25} color={APP_COLORS.WHITE} />
+                </Pressable>
+              </View>
+            ),
+          })}
+        />
         <Stack.Screen
           name="PaymentRequests"
           component={PaymentRequests}
