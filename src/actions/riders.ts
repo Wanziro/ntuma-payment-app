@@ -59,7 +59,7 @@ export const fetchRidersPaymentList =
       .then(res => {
         dispatch(setIsLoadingRidersPaymentList(false));
         dispatch(setIsHardReLoadingRidersPaymentList(false));
-        dispatch(setRidersPaymentList(res.data.paymentDetails));
+        dispatch(setRidersPaymentList(res.data.transactions));
       })
       .catch(error => {
         const err = returnErroMessage(error);

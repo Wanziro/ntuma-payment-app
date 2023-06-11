@@ -14,6 +14,8 @@ import PaymentItem from './item';
 import {
   INavigationProp,
   IPayment,
+  IPaymentListReducer,
+  IRidersPaymentListReducer,
   TOAST_MESSAGE_TYPES,
 } from '../../../../interfaces';
 import {errorHandler, setHeaders, toastMessage} from '../../../helpers';
@@ -30,7 +32,7 @@ import {
 const RidersPaymentRequests = ({navigation}: INavigationProp) => {
   const dispatch = useDispatch();
   const {payments, isLoading, hardReloading, loadingError} = useSelector(
-    (state: RootState) => state.paymentList,
+    (state: RootState) => state.riders as IRidersPaymentListReducer,
   );
   const {token} = useSelector((state: RootState) => state.user);
   const [showLoader, setShowLoader] = useState(false);
@@ -71,8 +73,8 @@ const RidersPaymentRequests = ({navigation}: INavigationProp) => {
     setShowAlert(false);
     dispatch(setIsHardReLoadingRidersPaymentList(true));
     dispatch(fetchRidersPaymentList());
-    dispatch(fetchClients());
-    dispatch(fetchMarkets());
+    // dispatch(fetchClients());
+    // dispatch(fetchMarkets());
   };
 
   const onRefresh = () => {

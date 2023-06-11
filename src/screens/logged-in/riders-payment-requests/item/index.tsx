@@ -1,6 +1,12 @@
 import {View, Text, Linking, Pressable} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {IClient, IMarket, IPayment} from '../../../../../interfaces';
+import {
+  IAgentsPayment,
+  IClient,
+  IMarket,
+  IPayment,
+  IRidersPayment,
+} from '../../../../../interfaces';
 import WhiteCard from '../../../../components/white-card';
 import {viewFlexCenter, viewFlexSpace} from '../../../../constants/styles';
 import {APP_COLORS} from '../../../../constants/colors';
@@ -11,7 +17,7 @@ import TimeAgo from '@andordavoti/react-native-timeago';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 interface IPaymentItemProps {
-  item: IPayment;
+  item: IRidersPayment;
   setSelectedPayment: any;
   setShowReject: any;
   setReason: any;
@@ -29,10 +35,10 @@ const PaymentItem = ({
   const [market, setMarket] = useState<IMarket | undefined>(undefined);
   const [agent, setAgent] = useState<IClient | undefined>(undefined);
 
-  const handlePay = (amount: number) => {
+  const handlePay = (amount: number, momoCode: number) => {
     try {
       const money = parseInt(amount as any);
-      const ussdCode = `*182*8*1*${money}#`;
+      const ussdCode = `*182*8*1*${momoCode}*${money}#`;
       const encodedUssdCode = encodeURIComponent(ussdCode);
       Linking.openURL('tel:' + encodedUssdCode);
     } catch (error) {
@@ -47,12 +53,12 @@ const PaymentItem = ({
     }
   };
 
-  useEffect(() => {
-    const agent = clients.find(i => i.agentId === item.agentId);
-    const market = markets.find(i => i.mId === item.marketId);
-    setAgent(agent);
-    setMarket(market);
-  }, [item]);
+  // useEffect(() => {
+  //   const agent = clients.find(i => i.agentId === item.agentId);
+  //   const market = markets.find(i => i.mId === item.marketId);
+  //   setAgent(agent);
+  //   setMarket(market);
+  // }, [item]);
   const handleReject = () => {
     setSelectedPayment(item);
     setReason('');
@@ -66,8 +72,13 @@ const PaymentItem = ({
   return (
     <WhiteCard style={{marginBottom: 15, padding: 10}}>
       <View style={[viewFlexSpace]}>
-        <Text style={{color: APP_COLORS.TEXT_GRAY, flex: 1, marginRight: 10}}>
-          {market?.name} | {agent?.names}
+        <Text
+          style={{
+            color: APP_COLORS.TEXT_GRAY,
+            flex: 1,
+            marginRight: 10,
+          }}>
+          TXID:{item.id}
         </Text>
         <TimeAgo
           style={{color: APP_COLORS.BLACK, fontWeight: '700'}}
@@ -77,10 +88,10 @@ const PaymentItem = ({
       <View style={[viewFlexSpace]}>
         <Text
           style={{color: APP_COLORS.BLACK, fontWeight: '600', marginRight: 10}}>
-          Names
+          Rider
         </Text>
         <Text style={{color: APP_COLORS.TEXT_GRAY, textAlign: 'right'}}>
-          {item.supplierNames}
+          {item.rider?.names}
         </Text>
       </View>
       <View style={[viewFlexSpace]}>
@@ -89,7 +100,7 @@ const PaymentItem = ({
           MOMO CODE
         </Text>
         <Text style={{color: APP_COLORS.TEXT_GRAY, textAlign: 'right'}}>
-          {item.supplierMOMOCode}
+          {item.rider?.momoCode}
         </Text>
       </View>
       <View style={[viewFlexSpace]}>
@@ -98,7 +109,7 @@ const PaymentItem = ({
           AMOUNT
         </Text>
         <Text style={{color: APP_COLORS.TEXT_GRAY, textAlign: 'right'}}>
-          {currencyFormatter(item.totalAmount)} RWF
+          {currencyFormatter(item.amount)} RWF
         </Text>
       </View>
       <View
@@ -108,16 +119,19 @@ const PaymentItem = ({
           borderTopWidth: 1,
         }}>
         <View style={[viewFlexSpace, {paddingTop: 10}]}>
-          <Pressable onPress={() => handlePay(item.totalAmount)}>
+          <Pressable
+            onPress={() =>
+              handlePay(Number(item.amount), Number(item.rider?.momoCode))
+            }>
             <View style={[viewFlexCenter]}>
               <Icon name="send-to-mobile" color={APP_COLORS.BLACK} size={20} />
               <Text style={{color: APP_COLORS.BLACK}}>Pay</Text>
             </View>
           </Pressable>
-          <Pressable onPress={() => handleCall(agent?.phone)}>
+          <Pressable onPress={() => handleCall(item.rider?.phone)}>
             <View style={[viewFlexCenter]}>
               <Icon name="call" color={APP_COLORS.BLACK} size={20} />
-              <Text style={{color: APP_COLORS.BLACK}}>Call Agent</Text>
+              <Text style={{color: APP_COLORS.BLACK}}>Call Rider</Text>
             </View>
           </Pressable>
           <Pressable onPress={() => handleReject()}>

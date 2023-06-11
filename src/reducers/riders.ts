@@ -1,4 +1,9 @@
-import {IAction, IPayment, IPaymentListReducer} from '../../interfaces';
+import {
+  IAction,
+  IPayment,
+  IPaymentListReducer,
+  IRidersPaymentListReducer,
+} from '../../interfaces';
 import {
   SET_ADD_RIDERS_PAYMENT_LIST,
   SET_RIDERS_PAYMENT_LIST,
@@ -9,7 +14,7 @@ import {
   SET_LOADING_RIDERS_PAYMENT_LIST_ERROR,
 } from '../actions/riders';
 
-const initialState: IPaymentListReducer = {
+const initialState: IRidersPaymentListReducer = {
   isLoading: false,
   payments: [],
   hardReloading: false,
@@ -19,18 +24,16 @@ const initialState: IPaymentListReducer = {
 const user = (state = initialState, action: IAction) => {
   switch (action.type) {
     case SET_RIDERS_PAYMENT_LIST:
-      return {...state, payments: action.payload as IPayment[]};
+      return {...state, payments: action.payload};
     case SET_ADD_RIDERS_PAYMENT_LIST:
       return {
         ...state,
-        payments: [action.payload, ...state.payments] as IPayment[],
+        payments: [action.payload, ...state.payments],
       };
     case SET_DELETE_RIDERS_PAYMENT_LIST:
       return {
         ...state,
-        payments: state.payments.filter(
-          item => item.id != action.payload.id,
-        ) as IPayment[],
+        payments: state.payments.filter(item => item.id != action.payload.id),
       };
     case SET_IS_LOADING_RIDERS_PAYMENT_LIST:
       return {...state, isLoading: action.payload as boolean};
