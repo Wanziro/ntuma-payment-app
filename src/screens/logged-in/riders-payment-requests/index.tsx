@@ -16,7 +16,9 @@ import {
   IPayment,
   IPaymentListReducer,
   IRidersPaymentListReducer,
+  PAYMENT_STATUS_ENUM,
   TOAST_MESSAGE_TYPES,
+  WALLET_DEPOSIT_WITHDRAW_ENUM,
 } from '../../../../interfaces';
 import {errorHandler, setHeaders, toastMessage} from '../../../helpers';
 import axios from 'axios';
@@ -81,8 +83,8 @@ const RidersPaymentRequests = ({navigation}: INavigationProp) => {
     setRefreshing(true);
     dispatch(setIsHardReLoadingRidersPaymentList(true));
     dispatch(fetchRidersPaymentList());
-    dispatch(fetchClients());
-    dispatch(fetchMarkets());
+    // dispatch(fetchClients());
+    // dispatch(fetchMarkets());
   };
 
   const handleRejectPayment = () => {
@@ -144,17 +146,28 @@ const RidersPaymentRequests = ({navigation}: INavigationProp) => {
         <View style={{padding: 10, flex: 1}}>
           {isLoading ? (
             <Loader />
-          ) : payments.length > 0 ? (
-            payments.map((item, index) => (
-              <PaymentItem
-                item={item}
-                key={index}
-                setSelectedPayment={setSelectedPayment}
-                handleDocumentSelect={handleDocumentSelect}
-                setShowReject={setShowReject}
-                setReason={setReason}
-              />
-            ))
+          ) : payments.filter(
+              item =>
+                item.paymentStatus === PAYMENT_STATUS_ENUM.PENDING &&
+                item.transactionType === WALLET_DEPOSIT_WITHDRAW_ENUM.WITHDRAW,
+            ).length > 0 ? (
+            payments
+              .filter(
+                item =>
+                  item.paymentStatus === PAYMENT_STATUS_ENUM.PENDING &&
+                  item.transactionType ===
+                    WALLET_DEPOSIT_WITHDRAW_ENUM.WITHDRAW,
+              )
+              .map((item, index) => (
+                <PaymentItem
+                  item={item}
+                  key={index}
+                  setSelectedPayment={setSelectedPayment}
+                  handleDocumentSelect={handleDocumentSelect}
+                  setShowReject={setShowReject}
+                  setReason={setReason}
+                />
+              ))
           ) : (
             <NotFound title="No requests currently found." />
           )}

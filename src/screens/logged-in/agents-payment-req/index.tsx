@@ -83,8 +83,8 @@ const AgentsPaymentRequests = ({navigation}: INavigationProp) => {
     setRefreshing(true);
     dispatch(setIsHardReLoadingAgentsPaymentList(true));
     dispatch(fetchAgentsPaymentList());
-    dispatch(fetchClients());
-    dispatch(fetchMarkets());
+    // dispatch(fetchClients());
+    // dispatch(fetchMarkets());
   };
 
   const handleRejectPayment = () => {
