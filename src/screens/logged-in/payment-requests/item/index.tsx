@@ -29,10 +29,10 @@ const PaymentItem = ({
   const [market, setMarket] = useState<IMarket | undefined>(undefined);
   const [agent, setAgent] = useState<IClient | undefined>(undefined);
 
-  const handlePay = (amount: number) => {
+  const handlePay = (amount: number, momoCode: number) => {
     try {
       const money = parseInt(amount as any);
-      const ussdCode = `*182*8*1*${money}#`;
+      const ussdCode = `*182*8*1*${momoCode}*${money}#`;
       const encodedUssdCode = encodeURIComponent(ussdCode);
       Linking.openURL('tel:' + encodedUssdCode);
     } catch (error) {
@@ -108,7 +108,10 @@ const PaymentItem = ({
           borderTopWidth: 1,
         }}>
         <View style={[viewFlexSpace, {paddingTop: 10}]}>
-          <Pressable onPress={() => handlePay(item.totalAmount)}>
+          <Pressable
+            onPress={() =>
+              handlePay(item.totalAmount, Number(item.supplierMOMOCode))
+            }>
             <View style={[viewFlexCenter]}>
               <Icon name="send-to-mobile" color={APP_COLORS.BLACK} size={20} />
               <Text style={{color: APP_COLORS.BLACK}}>Pay</Text>
