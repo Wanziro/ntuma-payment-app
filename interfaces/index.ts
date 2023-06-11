@@ -509,8 +509,46 @@ export interface IPayment {
   updatedAt: string;
 }
 
+interface IAgent {
+  agentId: number;
+  names: string;
+  idNumber: string;
+  idNumberDocument: string;
+  email: string;
+  phone: string;
+  momoCode?: number;
+}
+
+export enum WALLET_DEPOSIT_WITHDRAW_ENUM {
+  DEPOSIT = 'deposit',
+  WITHDRAW = 'withdraw',
+}
+
+export interface IAgentsPayment {
+  id: number;
+  agentId: number;
+  orderId: number;
+  transactionType: WALLET_DEPOSIT_WITHDRAW_ENUM;
+  amount: string;
+  transactionId: string;
+  paymentPhoneNumber: string | null;
+  paymentStatus: PAYMENT_STATUS_ENUM;
+  payementProof: string | null;
+  failureReason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  agent?: IAgent;
+}
+
 export interface IPaymentListReducer {
   payments: IPayment[];
+  isLoading: boolean;
+  hardReloading: boolean;
+  loadingError: string;
+}
+
+export interface IAgentsPaymentListReducer {
+  payments: IAgentsPayment[];
   isLoading: boolean;
   hardReloading: boolean;
   loadingError: string;

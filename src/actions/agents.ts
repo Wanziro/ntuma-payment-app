@@ -59,7 +59,7 @@ export const fetchAgentsPaymentList =
       .then(res => {
         dispatch(setIsLoadingAgentsPaymentList(false));
         dispatch(setIsHardReLoadingAgentsPaymentList(false));
-        dispatch(setAgentsPaymentList(res.data.paymentDetails));
+        dispatch(setAgentsPaymentList(res.data.transactions));
       })
       .catch(error => {
         const err = returnErroMessage(error);

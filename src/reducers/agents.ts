@@ -1,4 +1,9 @@
-import {IAction, IPayment, IPaymentListReducer} from '../../interfaces';
+import {
+  IAction,
+  IAgentsPaymentListReducer,
+  IPayment,
+  IPaymentListReducer,
+} from '../../interfaces';
 import {
   SET_ADD_AGENTS_PAYMENT_LIST,
   SET_AGENTS_PAYMENT_LIST,
@@ -9,7 +14,7 @@ import {
   SET_LOADING_AGENTS_PAYMENT_LIST_ERROR,
 } from '../actions/agents';
 
-const initialState: IPaymentListReducer = {
+const initialState: IAgentsPaymentListReducer = {
   isLoading: false,
   payments: [],
   hardReloading: false,
@@ -28,9 +33,7 @@ const user = (state = initialState, action: IAction) => {
     case SET_DELETE_AGENTS_PAYMENT_LIST:
       return {
         ...state,
-        payments: state.payments.filter(
-          item => item.id != action.payload.id,
-        ) as IPayment[],
+        payments: state.payments.filter(item => item.id != action.payload.id),
       };
     case SET_IS_LOADING_AGENTS_PAYMENT_LIST:
       return {...state, isLoading: action.payload as boolean};

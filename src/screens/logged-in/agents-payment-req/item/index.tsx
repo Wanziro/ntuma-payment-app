@@ -1,6 +1,11 @@
 import {View, Text, Linking, Pressable} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {IClient, IMarket, IPayment} from '../../../../../interfaces';
+import {
+  IAgentsPayment,
+  IClient,
+  IMarket,
+  IPayment,
+} from '../../../../../interfaces';
 import WhiteCard from '../../../../components/white-card';
 import {viewFlexCenter, viewFlexSpace} from '../../../../constants/styles';
 import {APP_COLORS} from '../../../../constants/colors';
@@ -11,7 +16,7 @@ import TimeAgo from '@andordavoti/react-native-timeago';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 interface IPaymentItemProps {
-  item: IPayment;
+  item: IAgentsPayment;
   setSelectedPayment: any;
   setShowReject: any;
   setReason: any;
@@ -47,12 +52,12 @@ const PaymentItem = ({
     }
   };
 
-  useEffect(() => {
-    const agent = clients.find(i => i.agentId === item.agentId);
-    const market = markets.find(i => i.mId === item.marketId);
-    setAgent(agent);
-    setMarket(market);
-  }, [item]);
+  // useEffect(() => {
+  //   const agent = clients.find(i => i.agentId === item.agentId);
+  //   const market = markets.find(i => i.mId === item.marketId);
+  //   setAgent(agent);
+  //   setMarket(market);
+  // }, [item]);
   const handleReject = () => {
     setSelectedPayment(item);
     setReason('');
@@ -66,9 +71,12 @@ const PaymentItem = ({
   return (
     <WhiteCard style={{marginBottom: 15, padding: 10}}>
       <View style={[viewFlexSpace]}>
-        <Text style={{color: APP_COLORS.TEXT_GRAY, flex: 1, marginRight: 10}}>
-          {market?.name} | {agent?.names}
-        </Text>
+        <Text
+          style={{
+            color: APP_COLORS.TEXT_GRAY,
+            flex: 1,
+            marginRight: 10,
+          }}></Text>
         <TimeAgo
           style={{color: APP_COLORS.BLACK, fontWeight: '700'}}
           dateTo={new Date(item.createdAt)}
@@ -77,10 +85,10 @@ const PaymentItem = ({
       <View style={[viewFlexSpace]}>
         <Text
           style={{color: APP_COLORS.BLACK, fontWeight: '600', marginRight: 10}}>
-          Names
+          Agent
         </Text>
         <Text style={{color: APP_COLORS.TEXT_GRAY, textAlign: 'right'}}>
-          {item.supplierNames}
+          {item.agent?.names}
         </Text>
       </View>
       <View style={[viewFlexSpace]}>
@@ -89,7 +97,7 @@ const PaymentItem = ({
           MOMO CODE
         </Text>
         <Text style={{color: APP_COLORS.TEXT_GRAY, textAlign: 'right'}}>
-          {item.supplierMOMOCode}
+          {item.agent?.momoCode}
         </Text>
       </View>
       <View style={[viewFlexSpace]}>
@@ -98,7 +106,7 @@ const PaymentItem = ({
           AMOUNT
         </Text>
         <Text style={{color: APP_COLORS.TEXT_GRAY, textAlign: 'right'}}>
-          {currencyFormatter(item.totalAmount)} RWF
+          {currencyFormatter(item.amount)} RWF
         </Text>
       </View>
       <View
@@ -108,7 +116,7 @@ const PaymentItem = ({
           borderTopWidth: 1,
         }}>
         <View style={[viewFlexSpace, {paddingTop: 10}]}>
-          <Pressable onPress={() => handlePay(item.totalAmount)}>
+          <Pressable onPress={() => handlePay(Number(item.amount))}>
             <View style={[viewFlexCenter]}>
               <Icon name="send-to-mobile" color={APP_COLORS.BLACK} size={20} />
               <Text style={{color: APP_COLORS.BLACK}}>Pay</Text>

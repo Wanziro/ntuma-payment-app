@@ -12,9 +12,13 @@ import FastImage from 'react-native-fast-image';
 import Loader from './loader';
 import PaymentItem from './item';
 import {
+  IAgentsPayment,
+  IAgentsPaymentListReducer,
   INavigationProp,
   IPayment,
+  PAYMENT_STATUS_ENUM,
   TOAST_MESSAGE_TYPES,
+  WALLET_DEPOSIT_WITHDRAW_ENUM,
 } from '../../../../interfaces';
 import {errorHandler, setHeaders, toastMessage} from '../../../helpers';
 import axios from 'axios';
@@ -30,16 +34,16 @@ import {
 const AgentsPaymentRequests = ({navigation}: INavigationProp) => {
   const dispatch = useDispatch();
   const {payments, isLoading, hardReloading, loadingError} = useSelector(
-    (state: RootState) => state.paymentList,
+    (state: RootState) => state.agents as IAgentsPaymentListReducer,
   );
   const {token} = useSelector((state: RootState) => state.user);
   const [showLoader, setShowLoader] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [showReject, setShowReject] = useState(false);
-  const [selectedPayment, setSelectedPayment] = useState<undefined | IPayment>(
-    undefined,
-  );
+  const [selectedPayment, setSelectedPayment] = useState<
+    undefined | IAgentsPayment
+  >(undefined);
   const [reason, setReason] = useState('');
   useEffect(() => {
     let sub = true;
@@ -142,17 +146,28 @@ const AgentsPaymentRequests = ({navigation}: INavigationProp) => {
         <View style={{padding: 10, flex: 1}}>
           {isLoading ? (
             <Loader />
-          ) : payments.length > 0 ? (
-            payments.map((item, index) => (
-              <PaymentItem
-                item={item}
-                key={index}
-                setSelectedPayment={setSelectedPayment}
-                handleDocumentSelect={handleDocumentSelect}
-                setShowReject={setShowReject}
-                setReason={setReason}
-              />
-            ))
+          ) : payments.filter(
+              item =>
+                item.paymentStatus === PAYMENT_STATUS_ENUM.PENDING &&
+                item.transactionType === WALLET_DEPOSIT_WITHDRAW_ENUM.WITHDRAW,
+            ).length > 0 ? (
+            payments
+              .filter(
+                item =>
+                  item.paymentStatus === PAYMENT_STATUS_ENUM.PENDING &&
+                  item.transactionType ===
+                    WALLET_DEPOSIT_WITHDRAW_ENUM.WITHDRAW,
+              )
+              .map((item, index) => (
+                <PaymentItem
+                  item={item}
+                  key={index}
+                  setSelectedPayment={setSelectedPayment}
+                  handleDocumentSelect={handleDocumentSelect}
+                  setShowReject={setShowReject}
+                  setReason={setReason}
+                />
+              ))
           ) : (
             <NotFound title="No requests currently found." />
           )}
