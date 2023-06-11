@@ -37,7 +37,12 @@ const Preview = ({route, navigation}: INavigationPropWithRouteRequired) => {
       formData.append('file', file);
       formData.append('id', selectedPayment.id);
       setIsLoading(true);
-      const url = app.BACKEND_URL + '/suppliers/pay';
+      const pymt: any = selectedPayment;
+      const url = pymt.agent
+        ? app.BACKEND_URL + '/agentswallet/pay'
+        : pymt.rider
+        ? app.BACKEND_URL + '/riderswallet/pay'
+        : app.BACKEND_URL + '/suppliers/pay';
       var xhr = new XMLHttpRequest();
       xhr.open('POST', url);
       xhr.onload = function () {
