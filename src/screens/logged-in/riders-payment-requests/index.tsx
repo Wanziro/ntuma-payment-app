@@ -13,6 +13,7 @@ import Loader from './loader';
 import PaymentItem from './item';
 import {
   INavigationProp,
+  INavigationPropWithRouteRequired,
   IPayment,
   IPaymentListReducer,
   IRidersPaymentListReducer,
@@ -30,8 +31,12 @@ import {
   fetchRidersPaymentList,
   setIsHardReLoadingRidersPaymentList,
 } from '../../../actions/riders';
+import {useFocusEffect} from '@react-navigation/native';
 
-const RidersPaymentRequests = ({navigation}: INavigationProp) => {
+const RidersPaymentRequests = ({
+  navigation,
+  route,
+}: INavigationPropWithRouteRequired) => {
   const dispatch = useDispatch();
   const {payments, isLoading, hardReloading, loadingError} = useSelector(
     (state: RootState) => state.riders as IRidersPaymentListReducer,
@@ -67,9 +72,15 @@ const RidersPaymentRequests = ({navigation}: INavigationProp) => {
     };
   }, [isLoading]);
 
-  useEffect(() => {
-    dispatch(fetchRidersPaymentList());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(fetchRidersPaymentList());
+  // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(fetchRidersPaymentList());
+    }, [route.name]),
+  );
 
   const alertCallBack = () => {
     setShowAlert(false);

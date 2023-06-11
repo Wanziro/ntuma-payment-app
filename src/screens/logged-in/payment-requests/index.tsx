@@ -16,6 +16,7 @@ import Loader from './loader';
 import PaymentItem from './item';
 import {
   INavigationProp,
+  INavigationPropWithRouteRequired,
   IPayment,
   TOAST_MESSAGE_TYPES,
 } from '../../../../interfaces';
@@ -25,8 +26,12 @@ import {app} from '../../../constants/app';
 import FullPageLoader from '../../../components/full-page-loader';
 import NotFound from '../../../components/not-found';
 import DocumentPicker from 'react-native-document-picker';
+import {useFocusEffect} from '@react-navigation/native';
 
-const PaymentRequests = ({navigation}: INavigationProp) => {
+const PaymentRequests = ({
+  navigation,
+  route,
+}: INavigationPropWithRouteRequired) => {
   const dispatch = useDispatch();
   const {payments, isLoading, hardReloading, loadingError} = useSelector(
     (state: RootState) => state.paymentList,
@@ -62,9 +67,15 @@ const PaymentRequests = ({navigation}: INavigationProp) => {
     };
   }, [isLoading]);
 
-  useEffect(() => {
-    dispatch(fetchPaymentList());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(fetchPaymentList());
+  // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(fetchPaymentList());
+    }, [route.name]),
+  );
 
   const alertCallBack = () => {
     setShowAlert(false);

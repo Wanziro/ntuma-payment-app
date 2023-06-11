@@ -15,6 +15,7 @@ import {
   IAgentsPayment,
   IAgentsPaymentListReducer,
   INavigationProp,
+  INavigationPropWithRouteRequired,
   IPayment,
   PAYMENT_STATUS_ENUM,
   TOAST_MESSAGE_TYPES,
@@ -30,8 +31,12 @@ import {
   fetchAgentsPaymentList,
   setIsHardReLoadingAgentsPaymentList,
 } from '../../../actions/agents';
+import {useFocusEffect} from '@react-navigation/native';
 
-const AgentsPaymentRequests = ({navigation}: INavigationProp) => {
+const AgentsPaymentRequests = ({
+  navigation,
+  route,
+}: INavigationPropWithRouteRequired) => {
   const dispatch = useDispatch();
   const {payments, isLoading, hardReloading, loadingError} = useSelector(
     (state: RootState) => state.agents as IAgentsPaymentListReducer,
@@ -67,9 +72,15 @@ const AgentsPaymentRequests = ({navigation}: INavigationProp) => {
     };
   }, [isLoading]);
 
-  useEffect(() => {
-    dispatch(fetchAgentsPaymentList());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(fetchAgentsPaymentList());
+  // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(fetchAgentsPaymentList());
+    }, [route.name]),
+  );
 
   const alertCallBack = () => {
     setShowAlert(false);
