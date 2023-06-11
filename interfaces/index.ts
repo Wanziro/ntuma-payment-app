@@ -519,6 +519,16 @@ interface IAgent {
   momoCode?: number;
 }
 
+interface IRider {
+  riderId: number;
+  names: string;
+  idNumber: string;
+  idNumberDocument: string;
+  email: string;
+  phone: string;
+  momoCode?: number;
+}
+
 export enum WALLET_DEPOSIT_WITHDRAW_ENUM {
   DEPOSIT = 'deposit',
   WITHDRAW = 'withdraw',
@@ -540,6 +550,22 @@ export interface IAgentsPayment {
   agent?: IAgent;
 }
 
+export interface IRidersPayment {
+  id: number;
+  riderId: number;
+  orderId: number;
+  transactionType: WALLET_DEPOSIT_WITHDRAW_ENUM;
+  amount: string;
+  transactionId: string;
+  paymentPhoneNumber: string | null;
+  paymentStatus: PAYMENT_STATUS_ENUM;
+  payementProof: string | null;
+  failureReason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  rider?: IRider;
+}
+
 export interface IPaymentListReducer {
   payments: IPayment[];
   isLoading: boolean;
@@ -549,6 +575,13 @@ export interface IPaymentListReducer {
 
 export interface IAgentsPaymentListReducer {
   payments: IAgentsPayment[];
+  isLoading: boolean;
+  hardReloading: boolean;
+  loadingError: string;
+}
+
+export interface IRidersPaymentListReducer {
+  payments: IRidersPayment[];
   isLoading: boolean;
   hardReloading: boolean;
   loadingError: string;

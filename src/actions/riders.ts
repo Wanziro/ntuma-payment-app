@@ -1,4 +1,4 @@
-import {IAction, IPayment} from '../../interfaces';
+import {IAction, IRidersPayment} from '../../interfaces';
 import {app} from '../constants/app';
 import {returnErroMessage, setHeaders} from '../helpers';
 import axios from 'axios';
@@ -14,17 +14,17 @@ export const SET_IS_HARD_RELOADING_RIDERS_PAYMENT_LIST =
   'SET_IS_HARD_RELOADING_RIDERS_PAYMENT_LIST';
 export const RESET_RIDERS_PAYMENT_LIST = 'RESET_RIDERS_PAYMENT_LIST';
 
-export const setRidersPaymentList = (payments: IPayment[]): IAction => ({
+export const setRidersPaymentList = (payments: IRidersPayment[]): IAction => ({
   type: SET_RIDERS_PAYMENT_LIST,
   payload: payments,
 });
 
-export const addRidersPaymentList = (payment: IPayment): IAction => ({
+export const addRidersPaymentList = (payment: IRidersPayment): IAction => ({
   type: SET_ADD_RIDERS_PAYMENT_LIST,
   payload: payment,
 });
 
-export const deleteRidersPaymentList = (payment: IPayment): IAction => ({
+export const deleteRidersPaymentList = (payment: IRidersPayment): IAction => ({
   type: SET_DELETE_RIDERS_PAYMENT_LIST,
   payload: payment,
 });
