@@ -184,7 +184,7 @@ const AgentsPaymentRequests = ({navigation}: INavigationProp) => {
             textAlign: 'center',
             fontWeight: '600',
           }}>
-          Confirmation
+          Confirmation for TXID:{selectedPayment?.id}
         </Text>
         <TextInput
           style={[commonInput, {maxHeight: 200}]}

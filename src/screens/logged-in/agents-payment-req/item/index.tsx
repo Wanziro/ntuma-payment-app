@@ -76,7 +76,9 @@ const PaymentItem = ({
             color: APP_COLORS.TEXT_GRAY,
             flex: 1,
             marginRight: 10,
-          }}></Text>
+          }}>
+          TXID:{item.id}
+        </Text>
         <TimeAgo
           style={{color: APP_COLORS.BLACK, fontWeight: '700'}}
           dateTo={new Date(item.createdAt)}
