@@ -6,6 +6,7 @@ import Navigation from './src/navigation';
 import {store} from './src/store';
 import {subscribeToSocket, unSubscribeToSocket} from './src/worker/socket';
 import {saveAppToken, setFbToken} from './src/actions/user';
+import PushNotification from 'react-native-push-notification';
 
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
@@ -35,15 +36,41 @@ const requestCloudMessagingNotificationPermissionFromUser = async () => {
 
 function App(): JSX.Element {
   const {user}: any = store.getState();
+
+  const createLocalPushNotificationChannel = () => {
+    PushNotification.createChannel(
+      {
+        channelId: 'ntumaPaymentChannelId',
+        channelName: 'ntumaPaymentChannel',
+      },
+      created => {
+        console.log('channel created: ' + created);
+      },
+    );
+  };
+
   useEffect(() => {
     subscribeToSocket(store);
     requestCloudMessagingNotificationPermissionFromUser();
+    createLocalPushNotificationChannel();
+
+    const fcmUnsubscribe = messaging().onMessage(async remoteMessage => {
+      // console.log({remoteMessage});
+      if (remoteMessage.notification?.body) {
+        PushNotification.localNotification({
+          channelId: 'ntumaPaymentChannelId',
+          title: remoteMessage.notification.title,
+          message: remoteMessage.notification.body,
+        });
+      }
+    });
 
     // window.addEventListener("online", handleOnline);
     // window.addEventListener("offline", handleOffline);
 
     return () => {
       unSubscribeToSocket();
+      fcmUnsubscribe();
       // window.removeEventListener("online", handleOnline);
       // window.removeEventListener("offline", handleOffline);
     };
