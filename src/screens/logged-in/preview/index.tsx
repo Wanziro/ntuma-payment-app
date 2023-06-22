@@ -36,7 +36,6 @@ const Preview = ({route, navigation}: INavigationPropWithRouteRequired) => {
     type: APPROVE_TYPES;
   };
   const [isLoading, setIsLoading] = useState(false);
-  console.log({type});
 
   const handleSendMessage = () => {
     try {
