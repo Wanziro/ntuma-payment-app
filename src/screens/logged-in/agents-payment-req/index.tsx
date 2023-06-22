@@ -32,6 +32,7 @@ import {
   setIsHardReLoadingAgentsPaymentList,
 } from '../../../actions/agents';
 import {useFocusEffect} from '@react-navigation/native';
+import {APPROVE_TYPES} from '../preview';
 
 const AgentsPaymentRequests = ({
   navigation,
@@ -127,7 +128,7 @@ const AgentsPaymentRequests = ({
       });
   };
 
-  const handleDocumentSelect = async () => {
+  const handleDocumentSelect = async (selectedItem: IPayment) => {
     try {
       const results = await DocumentPicker.pickSingle({
         type: [DocumentPicker.types.images],
@@ -136,7 +137,8 @@ const AgentsPaymentRequests = ({
       //   setState({...state, idNumberDocument: results as any});
       navigation.navigate('Preview', {
         file: results,
-        selectedPayment,
+        selectedPayment: selectedItem,
+        type: APPROVE_TYPES.AGENTS,
       });
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {

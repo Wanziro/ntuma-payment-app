@@ -29,9 +29,6 @@ const PaymentItem = ({
   setShowReject,
   setReason,
 }: IPaymentItemProps) => {
-  const {clients} = useSelector((state: RootState) => state.clients);
-  const {markets} = useSelector((state: RootState) => state.markets);
-  const [market, setMarket] = useState<IMarket | undefined>(undefined);
   const [agent, setAgent] = useState<IClient | undefined>(undefined);
 
   const handlePay = (amount: number, momoCode: number) => {
@@ -66,7 +63,7 @@ const PaymentItem = ({
 
   const handleApprove = () => {
     setSelectedPayment(item);
-    handleDocumentSelect();
+    handleDocumentSelect(item);
   };
   return (
     <WhiteCard style={{marginBottom: 15, padding: 10}}>

@@ -32,6 +32,7 @@ import {
   setIsHardReLoadingRidersPaymentList,
 } from '../../../actions/riders';
 import {useFocusEffect} from '@react-navigation/native';
+import {APPROVE_TYPES} from '../preview';
 
 const RidersPaymentRequests = ({
   navigation,
@@ -127,7 +128,7 @@ const RidersPaymentRequests = ({
       });
   };
 
-  const handleDocumentSelect = async () => {
+  const handleDocumentSelect = async (selectedItem: IPayment) => {
     try {
       const results = await DocumentPicker.pickSingle({
         type: [DocumentPicker.types.images],
@@ -137,6 +138,7 @@ const RidersPaymentRequests = ({
       navigation.navigate('Preview', {
         file: results,
         selectedPayment,
+        type: APPROVE_TYPES.RIDERS,
       });
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {

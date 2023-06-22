@@ -23,9 +23,9 @@ import FullPageLoader from '../../../components/full-page-loader';
 const {width, height} = Dimensions.get('window');
 
 export enum APPROVE_TYPES {
-  SUPPLIERS = '',
-  AGENTS = '',
-  RIDERS = '',
+  SUPPLIERS = 'SUPPLIERS',
+  AGENTS = 'AGENTS',
+  RIDERS = 'RIDERS',
 }
 
 const Preview = ({route, navigation}: INavigationPropWithRouteRequired) => {
@@ -44,7 +44,6 @@ const Preview = ({route, navigation}: INavigationPropWithRouteRequired) => {
       formData.append('file', file);
       formData.append('id', selectedPayment.id);
       setIsLoading(true);
-      const pymt: any = selectedPayment;
       const url =
         type === APPROVE_TYPES.AGENTS
           ? app.BACKEND_URL + '/agentswallet/pay'
