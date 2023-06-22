@@ -22,14 +22,21 @@ import {RootState} from '../../../reducers';
 import FullPageLoader from '../../../components/full-page-loader';
 const {width, height} = Dimensions.get('window');
 
+export enum APPROVE_TYPES {
+  SUPPLIERS = '',
+  AGENTS = '',
+  RIDERS = '',
+}
+
 const Preview = ({route, navigation}: INavigationPropWithRouteRequired) => {
   const {token} = useSelector((state: RootState) => state.user);
-  const {file, selectedPayment} = route.params as {
+  const {file, selectedPayment, type} = route.params as {
     file: {uri: string; type: string; name: string};
     selectedPayment: IPayment;
+    type: APPROVE_TYPES;
   };
   const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  console.log({type});
 
   const handleSendMessage = () => {
     try {
@@ -38,11 +45,12 @@ const Preview = ({route, navigation}: INavigationPropWithRouteRequired) => {
       formData.append('id', selectedPayment.id);
       setIsLoading(true);
       const pymt: any = selectedPayment;
-      const url = pymt.agent
-        ? app.BACKEND_URL + '/agentswallet/pay'
-        : pymt.rider
-        ? app.BACKEND_URL + '/riderswallet/pay'
-        : app.BACKEND_URL + '/suppliers/pay';
+      const url =
+        type === APPROVE_TYPES.AGENTS
+          ? app.BACKEND_URL + '/agentswallet/pay'
+          : type === APPROVE_TYPES.RIDERS
+          ? app.BACKEND_URL + '/riderswallet/pay'
+          : app.BACKEND_URL + '/suppliers/pay';
       var xhr = new XMLHttpRequest();
       xhr.open('POST', url);
       xhr.onload = function () {

@@ -27,6 +27,7 @@ import FullPageLoader from '../../../components/full-page-loader';
 import NotFound from '../../../components/not-found';
 import DocumentPicker from 'react-native-document-picker';
 import {useFocusEffect} from '@react-navigation/native';
+import {APPROVE_TYPES} from '../preview';
 
 const PaymentRequests = ({
   navigation,
@@ -122,7 +123,7 @@ const PaymentRequests = ({
       });
   };
 
-  const handleDocumentSelect = async () => {
+  const handleDocumentSelect = async (selectedItem: IPayment) => {
     try {
       const results = await DocumentPicker.pickSingle({
         type: [DocumentPicker.types.images],
@@ -131,7 +132,8 @@ const PaymentRequests = ({
       //   setState({...state, idNumberDocument: results as any});
       navigation.navigate('Preview', {
         file: results,
-        selectedPayment,
+        selectedPayment: selectedItem,
+        type: APPROVE_TYPES.SUPPLIERS,
       });
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
